@@ -5,9 +5,9 @@
     BOOL    inited;
 }
 
-- (void) initDAX:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) exitDAX: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) trackEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) trackPage:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) initDAX: (CDVInvokedUrlCommand*)command;
+- (void) exitDAX: (CDVInvokedUrlCommand*)command;
+- (void) trackEvent: (CDVInvokedUrlCommand*)command;
+- (void) trackPage: (CDVInvokedUrlCommand*)command;
 
 @end

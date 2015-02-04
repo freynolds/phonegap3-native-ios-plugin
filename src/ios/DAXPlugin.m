@@ -4,9 +4,9 @@
 #import <Cordova/CDV.h>
 
 @implementation DAXPlugin
-- (void) initDAX:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void) initDAX: (CDVInvokedUrlCommand*)command;
 {
-    NSString    *callbackId = [arguments pop];
+    NSString    *callbackId = command.callbackId;
     
     
     [CSComScore setCustomerC2:@"17502533"];
@@ -23,19 +23,19 @@
     [self successWithMessage: @"ok" toID:callbackId];
 }
 
--(void) exitDAX: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+-(void) exitDAX: (CDVInvokedUrlCommand*)command;
 {
-    NSString    *callbackId = [arguments pop];
+    NSString    *callbackId = command.callbackId;
     
 	
     [self successWithMessage:@"nothing" toID:callbackId];
 }
 
-- (void) trackEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void) trackEvent: (CDVInvokedUrlCommand*)command;
 {
-    NSString        *callbackId = [arguments pop];
-    NSString        *eventLabel = [arguments objectAtIndex:2];
-    NSInteger       eventValue = [[arguments objectAtIndex:3] intValue];
+    NSString        *callbackId = command.callbackId;
+    NSString        *eventLabel = [command.arguments objectAtIndex:2];
+    NSInteger       eventValue = [[command.arguments objectAtIndex:3] intValue];
     
     
     [CSComScore hiddenWithLabels:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -46,10 +46,10 @@
     [self successWithMessage:[NSString stringWithFormat:@"trackEvent: label = %@; value = %d", eventLabel, eventValue] toID:callbackId];
 }
 
-- (void) trackPage:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void) trackPage: (CDVInvokedUrlCommand*)command;
 {
-    NSString            *callbackId = [arguments pop];
-    NSString            *pageURL = [arguments objectAtIndex:0];
+    NSString            *callbackId = command.callbackId;
+    NSString            *pageURL = [command.arguments objectAtIndex:0];
 
     [CSComScore viewWithLabels:[NSDictionary dictionaryWithObjectsAndKeys:
                                 @"my.view.name", pageURL,
@@ -61,17 +61,24 @@
 
 -(void)successWithMessage:(NSString *)message toID:(NSString *)callbackID
 {
-    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
+    // CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
     
-    [self writeJavascript:[commandResult toSuccessCallbackString:callbackID]];
+    // [self writeJavascript:[commandResult toSuccessCallbackString:callbackID]];
+
+    CDVPluginResult* pluginResult = nil;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackID];
 }
 
 -(void)failWithMessage:(NSString *)message toID:(NSString *)callbackID withError:(NSError *)error
 {
-    NSString        *errorMessage = (error) ? [NSString stringWithFormat:@"%@ - %@", message, [error localizedDescription]] : message;
-    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
+    // CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
     
-    [self writeJavascript:[commandResult toErrorCallbackString:callbackID]];
+    // [self writeJavascript:[commandResult toErrorCallbackString:callbackID]];
+
+    CDVPluginResult* pluginResult = nil;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"error"];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackID];
 }
 
 @end
