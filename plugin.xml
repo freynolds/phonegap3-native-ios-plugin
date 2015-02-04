@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="de.websector.myplugin"
+    id="com.freynolds.dax"
     version="0.1.0">
-    <name>MyPlugin</name>   
+    <name>Comscore DAXPlugin</name>   
     <!-- ios -->
     <platform name="ios">    
         <config-file target="config.xml" parent="/*">
-            <feature name="MyPlugin">
-                <param name="ios-package" value="MyPlugin" /> 
+            <feature name="DAXPlugin">
+                <param name="ios-package" value="DAXPlugin" /> 
             </feature>
         </config-file>
-        <js-module src="www/MyPlugin.js" name="MyPlugin">
-            <clobbers target="myPlugin" />
+        <js-module src="www/DAXPlugin.js" name="DAXPlugin">
+            <clobbers target="DAXPlugin" />
         </js-module>
-        <header-file src="src/ios/MyPlugin.h" />
-	    <source-file src="src/ios/MyPlugin.m" />
+        <header-file src="src/ios/DAXPlugin.h" />
+	    <source-file src="src/ios/DAXPlugin.m" />
+
+        <source-file src="src/ios/comscore/libcomScore.a" framework="true" />
+        <header-file src="src/ios/comScore/headers/CSAggregateMeasurement.h" />
+        <header-file src="src/ios/comScore/headers/CSAppStartMeasurement.h" />
+        <header-file src="src/ios/comScore/headers/CSApplicationMeasurement.h" />
+        <header-file src="src/ios/comScore/headers/CSApplicationState.h" />
+        <header-file src="src/ios/comScore/headers/CSCacheFlusher.h" />
+        <header-file src="src/ios/comScore/headers/CSCensus.h" />
+        <header-file src="src/ios/comScore/headers/CSComScore.h" />
+        <header-file src="src/ios/comScore/headers/CSCore.h" />
+        <header-file src="src/ios/comScore/headers/CSCrypto.h" />
+        <header-file src="src/ios/comScore/headers/CSDate.h" />
+        <header-file src="src/ios/comScore/headers/CSDefines.h" />
+        <header-file src="src/ios/comScore/headers/CSDevice.h" />
+        <header-file src="src/ios/comScore/headers/CSDispatchProperties.h" />
+        <header-file src="src/ios/comScore/headers/CSDispatchQueue.h" />
+        <header-file src="src/ios/comScore/headers/CSEncoding.h" />
+        <header-file src="src/ios/comScore/headers/CSEventType.h" />
+        <header-file src="src/ios/comScore/headers/CSKeepAlive.h" />
+        <header-file src="src/ios/comScore/headers/CSLabel.h" />
+        <header-file src="src/ios/comScore/headers/CSMeasurement.h" />
+        <header-file src="src/ios/comScore/headers/CSNSData+Base64.h" />
+        <header-file src="src/ios/comScore/headers/CSNotificationsObserver.h" />
+        <header-file src="src/ios/comScore/headers/CSOfflineMeasurementsCache.h" />
+        <header-file src="src/ios/comScore/headers/CSPrivilegedLabel.h" />
+        <header-file src="src/ios/comScore/headers/CSReachability.h" />
+        <header-file src="src/ios/comScore/headers/CSRequest.h" />
+        <header-file src="src/ios/comScore/headers/CSSessionState.h" />
+        <header-file src="src/ios/comScore/headers/CSStorage.h" />
+        <header-file src="src/ios/comScore/headers/CSTransmissionMode.h" />
+        <header-file src="src/ios/comScore/headers/CSUncaughtExceptionHandler.h" />
+        <header-file src="src/ios/comScore/headers/CSUtils.h" />
+        <header-file src="src/ios/comScore/headers/SDK-Prefix.pch" /> 
+
+        <framework src="Security.framework" />  
+        <framework src="SystemConfiguration.framework" />
     </platform>
 </plugin>
