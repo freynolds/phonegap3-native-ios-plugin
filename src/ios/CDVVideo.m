@@ -3,7 +3,7 @@
 //
 //
 //  Created by Peter Robinett on 2012-10-15.
-//	Modifed by Francis Reynolds on 2014-02-05
+//  Modifed by Francis Reynolds on 2014-02-05
 //
 //
 
@@ -17,6 +17,8 @@
 
 - (void)pluginInitialize {
     
+    restart = FALSE;
+
     if (CDV_IsIPad()) {
         width = 730;
         height = 412;
@@ -24,15 +26,15 @@
         width = 320;
         height = 180;
     }
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MovieDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(MovieDidExitFullScreen:) name:MPMoviePlayerDidExitFullscreenNotification object:nil];
-    
+
     self.player.view.frame = CGRectMake(0, 61, width, height);
     self.player.view.hidden = true;
     self.player.moviePlayer.fullscreen = false;
     self.player.moviePlayer.controlStyle = MPMovieControlStyleEmbedded;
-    
+
     [self.viewController.view addSubview:self.player.view];
     
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -44,14 +46,17 @@
            selector:@selector(keyboardWillShowOrHide:)
                name:UIKeyboardWillHideNotification
              object:nil];
-    
+
 }
 
 - (void)play:(CDVInvokedUrlCommand*)command {
-    
+
     callback = command.callbackId;
     movie = [command.arguments objectAtIndex:0];
     if (self.player) {
+        restart = TRUE;
+        [self.player.moviePlayer stop];
+        restart = FALSE;
         self.player.moviePlayer.contentURL = [NSURL URLWithString:movie];
         [self.player.moviePlayer play];
         self.player.view.hidden = FALSE;
@@ -63,6 +68,10 @@
 }
 
 - (void)MovieDidFinish:(NSNotification *)notification {
+    if (restart) {
+        NSLog(@"MovieDidFinish by restart");
+        return;
+    }
     if (![callback isEqualToString:@"INVALID"]) {
         [super writeJavascript:[[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1] toSuccessCallbackString:callback]];
     }

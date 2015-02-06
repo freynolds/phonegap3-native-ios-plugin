@@ -7,13 +7,13 @@
 //
 
 #import <Cordova/CDV.h>
-#import "MovieViewController.h"
 
 @interface CDVVideo : CDVPlugin {
     NSString *callback;
     NSString *movie;
     NSInteger width;
     NSInteger height;
+    BOOL restart;
 }
 
 - (void)play:(CDVInvokedUrlCommand*)command;
