@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="de.websector.myplugin"
-    version="0.1.0">
-    <name>MyPlugin</name>   
+    id="com.freynolds.AppUtils"
+    version="0.0.1">
+    <name>AppUtils</name>   
     <!-- ios -->
     <platform name="ios">    
         <config-file target="config.xml" parent="/*">
-            <feature name="MyPlugin">
-                <param name="ios-package" value="MyPlugin" /> 
+            <feature name="AppUtils">
+                <param name="ios-package" value="AppUtils" /> 
             </feature>
         </config-file>
-        <js-module src="www/MyPlugin.js" name="MyPlugin">
-            <clobbers target="myPlugin" />
+        <js-module src="www/AppUtils.js" name="AppUtils">
+            <clobbers target="AppUtils" />
         </js-module>
-        <header-file src="src/ios/MyPlugin.h" />
-	    <source-file src="src/ios/MyPlugin.m" />
+        <header-file src="src/ios/AppUtils.h" />
+	    <source-file src="src/ios/AppUtils.m" />
     </platform>
 </plugin>
