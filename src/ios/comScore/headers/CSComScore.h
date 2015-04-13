@@ -1,14 +1,19 @@
 //
 //  CSComScore.h
 //  comScore
+//
+// Copyright 2014 comScore, Inc. All right reserved.
+//
 
+#import "CSTransmissionMode.h"
 
-#import <Foundation/Foundation.h>
-#import "CSCore.h"
-#import "CSCensus.h"
+#define kComScoreTrackingDisablePreferenceKey @"comScore-TrackingDisabledPreferenceKey"
+
+@class CSCensus;
+@class CSCore;
 
 @interface CSComScore : NSObject {
-    
+
 }
 
 /**
@@ -19,7 +24,7 @@
 /**
  Makes sure the internal instance is created
  */
-+(void) setAppContext;
++ (void)setAppContext;
 
 /**
  Returns CSCensus instance.
@@ -30,7 +35,7 @@
 /**
  Notify Application event Start
  */
-+ (void) start;
++ (void)start;
 
 
 /**
@@ -40,13 +45,13 @@
  
  - labels: A NSDictionary that contains the custom labels
  */
-+ (void) startWithLabels:(NSDictionary *)labels;
++ (void)startWithLabels:(NSDictionary *)labels;
 
 
 /**
  Notify Application event View
  */
-+ (void) view;
++ (void)view;
 
 /**
  Notify Application event View with custom labels
@@ -55,12 +60,12 @@
  
  - labels: A NSDictionary that contains the custom labels
  */
-+ (void) viewWithLabels:(NSDictionary *)labels;
++ (void)viewWithLabels:(NSDictionary *)labels;
 
 /**
  Notify Application event Hidden
  */
-+ (void) hidden;
++ (void)hidden;
 
 /**
  Notify Application event Hidden with custom labels
@@ -69,7 +74,7 @@
  
  - labels: A NSDictionary that contains the custom labels
  */
-+ (void) hiddenWithLabels:(NSDictionary *)labels;
++ (void)hiddenWithLabels:(NSDictionary *)labels;
 
 
 /**
@@ -79,7 +84,7 @@
  
  - labels: A NSDictionary that contains the custom labels
  */
-+ (void) aggregateWithLabels:(NSDictionary *)labels;
++ (void)aggregateWithLabels:(NSDictionary *)labels;
 
 /**
  Returns the pixel url
@@ -93,7 +98,7 @@
  
  - pixelURL: A NSString that contains the new pixel url
  */
-+ (NSString *) setPixelURL:(NSString *)pixelURL;
++ (NSString *)setPixelURL:(NSString *)pixelURL;
 
 /**
  Returns the customer c2
@@ -107,12 +112,12 @@
  
  - customerC2: A NSString that contains the new customer c2
  */
-+ (void) setCustomerC2:(NSString *)c2;
++ (void)setCustomerC2:(NSString *)c2;
 
 /**
  Returns the app name
  */
-+ (NSString *) appName;
++ (NSString *)appName;
 
 /**
  Sets a new app name
@@ -121,7 +126,7 @@
  
  - appName: A NSString that contains the new app name
  */
-+ (void) setAppName:(NSString *)appName;
++ (void)setAppName:(NSString *)appName;
 
 /**
  Returns the current device model
@@ -131,9 +136,9 @@
 /**
  Returns the time in that the current instance was created
  */
-+ (long long) genesis;
++ (long long)genesis;
 
-+ (long long) previousGenesis;
++ (long long)previousGenesis;
 
 /**
  Returns the dictionary with the custom labels
@@ -152,7 +157,7 @@
  
  - publisherSecret: A NSString that contains the new publisher secret
  */
-+ (void) setPublisherSecret:(NSString *)publisherSecret;
++ (void)setPublisherSecret:(NSString *)publisherSecret;
 
 /**
  Returns the visitor ID
@@ -166,12 +171,12 @@
  
  - publisherSecret: A NSString that contains the new publisher secret
  */
-+ (void) setVisitorID:(NSString *) visitorID;
++ (void)setVisitorID:(NSString *)visitorID;
 
 /**
  Sends all the cached offline measurements if any
  */
-+ (void) flushCache;
++ (void)flushCache;
 
 /**
  Sets a persitent custom label that will be sent in every measurement
@@ -181,7 +186,7 @@
  - name: A String with the name of the label to set
  - value: A String with the value of the label to set
  */
-+(void) setLabel:(NSString *)name value:(NSString *)value;
++ (void)setLabel:(NSString *)name value:(NSString *)value;
 
 /**
  Adds to the persistent custom labels dictionary all the labels from a dictionary
@@ -190,12 +195,12 @@
  
  - labels: A Dictionary with labels
  */
-+(void) setLabels:(NSDictionary *)labels;
++ (void)setLabels:(NSDictionary *)labels;
 
 /**
  Returns the persistent labels dictionary
  */
-+ (NSString *) label:(NSString *)labelName;
++ (NSString *)label:(NSString *)labelName;
 
 
 /**
@@ -206,7 +211,7 @@
  - name: A String with the name of the label to set
  - value: A String with the value of the label to set
  */
-+(void) setAutoStartLabel:(NSString *)name value:(NSString *)value;
++ (void)setAutoStartLabel:(NSString *)name value:(NSString *)value;
 
 /**
  Adds to the auto start labels dictionary all the labels from a dictionary
@@ -215,63 +220,63 @@
  
  - labels: A Dictionary with labels
  */
-+(void) setAutoStartLabels:(NSDictionary *)labels;
++ (void)setAutoStartLabels:(NSDictionary *)labels;
 
 /**
  Returns the auto start labels dictionary
  */
-+ (NSString *) autoStartLabel:(NSString *)labelName;
++ (NSString *)autoStartLabel:(NSString *)labelName;
 
-/** 
- Returns if the keep alive is enabled 
+/**
+ Returns if the keep alive is enabled
  */
-+ (BOOL) isKeepAliveEnabled;
++ (BOOL)isKeepAliveEnabled;
 
 /**
  Allows to enable/disable the keep alive
  */
-+ (void) setKeepAliveEnabled:(BOOL)enabled;
++ (void)setKeepAliveEnabled:(BOOL)enabled;
 
 /**
-  This mode will add use https for the automatically
-  generated pixelURL
+ This mode will add use https for the automatically
+ generated pixelURL
  
-  Parameters:
+ Parameters:
  
-  - publisherSecret: A BOOl indicating if secure is enabled.
+ - publisherSecret: A BOOl indicating if secure is enabled.
  */
-+ (void) setSecure:(BOOL)secure;
++ (void)setSecure:(BOOL)secure;
 
 /**
  * Returns if the secure mode is enabled
  */
-+ (BOOL) isSecure;
++ (BOOL)isSecure;
 
 /**
  Enables or disables live events (GETs) dispatched one by one when connectivity is available
  */
-+ (void) allowLiveTransmission:(CSTransmissionMode) mode;
++ (void)allowLiveTransmission:(CSTransmissionMode)mode;
 
 /**
  Enables or disables automatic offline cache flushes (POSTS). The cache can always be manually
  flushed using the public api comScore.FlushOfflineCache()
  */
-+ (void) allowOfflineTransmission:(CSTransmissionMode) mode;
++ (void)allowOfflineTransmission:(CSTransmissionMode)mode;
 
 /**
  Returns the live transmission mode
  */
-+ (CSTransmissionMode) liveTransmissionMode;
++ (CSTransmissionMode)liveTransmissionMode;
 
 /**
  Returns the offline transmission mode
  */
-+ (CSTransmissionMode) offlineTransmissionMode;
++ (CSTransmissionMode)offlineTransmissionMode;
 
 /**
  Returns the cross publisher id
  */
-+ (NSString *) crossPublisherId;
++ (NSString *)crossPublisherId;
 
 /**
  * Returns to specify the order in which labels will be present in the dispatched measurement.
@@ -281,88 +286,88 @@
 /**
  Disables auto update. This feature updates periodically the accumulated background times.
  */
-+ (void) disableAutoUpdate;
++ (void)disableAutoUpdate;
 
 /**
  Enables auto update. This feature updates periodically the accumulated background times.
  */
-+ (void) enableAutoUpdate:(int) intervalInSeconds foregroundOnly:(BOOL)foregroundOnly;
++ (void)enableAutoUpdate:(int)intervalInSeconds foregroundOnly:(BOOL)foregroundOnly;
 
 /**
  Returns the number of cold starts.
  */
-+ (int) coldStartCount;
++ (int)coldStartCount;
 
 /**
  Returns the cold start id
  */
-+ (long long) coldStartId;
++ (long long)coldStartId;
 
 /**
  Returns the current application version
  */
-+ (NSString *) currentVersion;
++ (NSString *)currentVersion;
 
 /**
  Returns the previous application version
  */
-+ (long long) firstInstallId;
++ (long long)firstInstallId;
 
 /**
  Returns the install id
  */
-+ (long long) installId;
++ (long long)installId;
 
 /**
  Returns the number of times the application was run
  */
-+ (int) runsCount;
++ (int)runsCount;
 
 /**
  Returns is auto update is enabled. This feature updates periodically the accumulated background times.
  */
-+ (BOOL) isAutoUpdateEnabled;
++ (BOOL)autoStartEnabled;
 
 /**
  Informs that the application entered foreground.
  */
-+ (void) onEnterForeground;
++ (void)onEnterForeground;
 
 /**
  Informs that the application left foreground.
  */
-+ (void) onExitForeground;
++ (void)onExitForeground;
 
 /**
  * Informs that user performed an interaction with application.
  */
-+ (void) onUserInteraction;
++ (void)onUserInteraction;
 
 /**
  * Informs that the application is providing some content to the user (playing music in the background, playing a movie etc.)
  */
-+ (void) onUxActive;
++ (void)onUxActive;
 
 /**
  * Informs that the application is no longer providing content to the user.
  */
-+ (void) onUxInactive;
++ (void)onUxInactive;
 
 /**
  * Allows to specify the order in which labels will be present in the dispatched measurement.
  */
-+ (void) setMeasurementLabelOrder:(NSArray *)ordering;
++ (void)setMeasurementLabelOrder:(NSArray *)ordering;
 
 /**
-  Accumulates the current timer registers, so the data won't be lost on crash.
-  Triggers IO operations in a separate thread so please use it wisely.
+ Accumulates the current timer registers, so the data won't be lost on crash.
+ Triggers IO operations in a separate thread so please use it wisely.
  */
-+ (void) update;
++ (void)update;
 
 /**
  Returns true if the device is jailbroke
  */
-+ (BOOL) isJailbroken;
++ (BOOL)isJailbroken;
 
 /**
  Returns the current SDK version
@@ -370,76 +375,104 @@
 + (NSString *)version;
 
 /**
-  Sets the maximum amount of measurements that can be cached.
+ Sets the maximum amount of measurements that can be cached.
  */
-+ (void) setCacheMaxSize:(int) maxSize;
++ (void)setCacheMaxSize:(int)maxSize;
 
 /**
  Returns the maximum amount of measurements that can be cached.
  */
-+ (int) cacheMaxSize;
++ (int)cacheMaxSize;
 
 /**
  Sets the maximum amount of measurements can be cached in a single file.
  */
-+ (void) setCacheMaxBatchSize:(int)maxBatchSize;
++ (void)setCacheMaxBatchSize:(int)maxBatchSize;
 
 /**
  Returns the maximum amount of measurements can be cached in a single file.
  */
-+ (int) cacheMaxBatchSize;
++ (int)cacheMaxBatchSize;
 
 /**
  Sets the maximum amount flushes of cached measurements can be send in a row.
  */
-+ (void) setCacheMaxFlushesInARow:(int)maxFlushesInARow;
++ (void)setCacheMaxFlushesInARow:(int)maxFlushesInARow;
 
 /**
  Returns the maximum amount flushes of cached measurements can be send in a row.
  */
-+ (int) cacheMaxFlushesInARow;
++ (int)cacheMaxFlushesInARow;
 
 /**
  Sets the minimal time between cache flush retries, in case of failure.
  */
-+ (void) setCacheMinutesToRetry:(int)minutesToRetry;
++ (void)setCacheMinutesToRetry:(int)minutesToRetry;
 
 /**
  Returns the minimal time between cache flush retries, in case of failure.
  */
-+ (int) cacheMinutesToRetry;
++ (int)cacheMinutesToRetry;
 
 /**
  Sets the time after which the measurements in the cache should expire.
  */
-+ (void) setCacheExpiryInDays:(int)expiricyInDays;
++ (void)setCacheExpiryInDays:(int)expiricyInDays;
 
 /**
  Returns the time after which the measurements in the cache should expire.
  */
-+ (int) cacheExpiryInDays;
++ (int)cacheExpiryInDays;
 
 /**
  Returns the interval between automated cache flushes.
  */
-+ (long) cacheFlushingInterval;
++ (long)cacheFlushingInterval;
 
 /**
  Sets the interval between automated cache flushes.
  */
-+ (void) setCacheFlushingInterval:(long) seconds;
++ (void)setCacheFlushingInterval:(long)seconds;
 
 /**
  Enables error handling
  */
-+ (void) setErrorHandlingEnabled:(BOOL) value;
++ (void)setErrorHandlingEnabled:(BOOL)value;
 
 /**
  Returns if error handling is enabled
  */
-+ (BOOL) isErrorHandlingEnabled;
++ (BOOL)isErrorHandlingEnabled;
 
-+ (void) setAutoStartEnabled:(BOOL)value;
++ (void)setAutoStartEnabled:(BOOL)value;
+
+/**
+ Enable or disable the comScore log
+ */
++ (void)setDebug:(BOOL)enable;
+
+/** Blocks the thread until all previous tasks are finished
+ *
+ *  __Important:__ This call will block the thread. Use it only when necessary.
+ */
++ (void)waitForTasks;
+
+/**
+ * Enables or disables tracking. When tracking is disabled, no measurement is sent and
+ * no data is collected.
+ */
++ (void)setEnabled:(BOOL)enabled;
+
+/**
+ * Indicates if tracking is enabled. When tracking is disabled, no measurement is sent and
+ * no data is collected.
+ */
++ (BOOL)enabled;
+
+/**
+ * Sets the url for offline cache flushes.
+ */
++ (void)setOfflineURL:(NSString *)value;
 
 
 @end

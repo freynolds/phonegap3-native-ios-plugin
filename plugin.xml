@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="com.freynolds.dax"
-    version="0.1.0">
+    version="0.1.1">
     <name>Comscore DAXPlugin</name>   
     <!-- ios -->
     <platform name="ios">    
@@ -18,38 +18,31 @@
 	    <source-file src="src/ios/DAXPlugin.m" />
 
         <source-file src="src/ios/comscore/libcomScore.a" framework="true" />
-        <header-file src="src/ios/comScore/headers/CSAggregateMeasurement.h" />
-        <header-file src="src/ios/comScore/headers/CSAppStartMeasurement.h" />
-        <header-file src="src/ios/comScore/headers/CSApplicationMeasurement.h" />
         <header-file src="src/ios/comScore/headers/CSApplicationState.h" />
         <header-file src="src/ios/comScore/headers/CSCacheFlusher.h" />
         <header-file src="src/ios/comScore/headers/CSCensus.h" />
         <header-file src="src/ios/comScore/headers/CSComScore.h" />
         <header-file src="src/ios/comScore/headers/CSCore.h" />
-        <header-file src="src/ios/comScore/headers/CSCrypto.h" />
-        <header-file src="src/ios/comScore/headers/CSDate.h" />
-        <header-file src="src/ios/comScore/headers/CSDefines.h" />
-        <header-file src="src/ios/comScore/headers/CSDevice.h" />
-        <header-file src="src/ios/comScore/headers/CSDispatchProperties.h" />
-        <header-file src="src/ios/comScore/headers/CSDispatchQueue.h" />
-        <header-file src="src/ios/comScore/headers/CSEncoding.h" />
         <header-file src="src/ios/comScore/headers/CSEventType.h" />
         <header-file src="src/ios/comScore/headers/CSKeepAlive.h" />
-        <header-file src="src/ios/comScore/headers/CSLabel.h" />
-        <header-file src="src/ios/comScore/headers/CSMeasurement.h" />
-        <header-file src="src/ios/comScore/headers/CSNSData+Base64.h" />
+        <header-file src="src/ios/comScore/headers/CSMeasurementDispatcher.h" />
         <header-file src="src/ios/comScore/headers/CSNotificationsObserver.h" />
-        <header-file src="src/ios/comScore/headers/CSOfflineMeasurementsCache.h" />
-        <header-file src="src/ios/comScore/headers/CSPrivilegedLabel.h" />
-        <header-file src="src/ios/comScore/headers/CSReachability.h" />
-        <header-file src="src/ios/comScore/headers/CSRequest.h" />
+        <header-file src="src/ios/comScore/headers/CSOfflineCache.h" />
         <header-file src="src/ios/comScore/headers/CSSessionState.h" />
         <header-file src="src/ios/comScore/headers/CSStorage.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSense.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseAVPlayerPlugin.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseClip.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseDefines.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseDelegate.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseMPMoviePlayerControllerPlugin.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSensePlaylist.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSensePlugin.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSensePluginProtocol.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamSenseState.h" />
+        <header-file src="src/ios/comScore/headers/CSStreamingTag.h" />
+        <header-file src="src/ios/comScore/headers/CSTaskExecutor.h" />
         <header-file src="src/ios/comScore/headers/CSTransmissionMode.h" />
-        <header-file src="src/ios/comScore/headers/CSUncaughtExceptionHandler.h" />
-        <header-file src="src/ios/comScore/headers/CSUtils.h" />
-        <header-file src="src/ios/comScore/headers/SDK-Prefix.pch" /> 
-
         <framework src="Security.framework" />  
         <framework src="SystemConfiguration.framework" />
     </platform>

@@ -2,19 +2,17 @@
 //  CSCensus.h
 //  ComScore
 //
-//  Copyright 2011 comScore, Inc. All rights reserved.
+// Copyright 2014 comScore, Inc. All right reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-
 @interface CSCensus : NSObject {
-	NSString *customerID;
+
+    NSString *_customerID;
 }
 
--(id) init;
+- (id)init;
 
--(void) notifyStart: (NSString *) censusID andSecret: (NSString *) publisherSalt;
+- (void)notifyStart:(NSString *)censusID andSecret:(NSString *)publisherSalt;
 
 + (CSCensus *)census;
 
