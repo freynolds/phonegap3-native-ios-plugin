@@ -1,6 +1,6 @@
 #import <Cordova/CDV.h>
 
-@interface DAXPlugin : CDVPlugin
+@interface DaxPlugin : CDVPlugin
 {
     BOOL    inited;
 }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="com.freynolds.dax"
+    id="com.freynolds.DaxPlugin"
     version="0.1.1">
-    <name>Comscore DAXPlugin</name>   
+    <name>Comscore DaxPlugin</name>   
     <!-- ios -->
     <platform name="ios">    
         <config-file target="config.xml" parent="/*">
-            <feature name="DAXPlugin">
-                <param name="ios-package" value="DAXPlugin" /> 
+            <feature name="DaxPlugin">
+                <param name="ios-package" value="DaxPlugin" /> 
             </feature>
         </config-file>
-        <js-module src="www/DAXPlugin.js" name="DAXPlugin">
-            <clobbers target="DAXPlugin" />
+        <js-module src="www/DaxPlugin.js" name="DaxPlugin">
+            <clobbers target="DaxPlugin" />
         </js-module>
-        <header-file src="src/ios/DAXPlugin.h" />
-	    <source-file src="src/ios/DAXPlugin.m" />
+        <header-file src="src/ios/DaxPlugin.h" />
+	    <source-file src="src/ios/DaxPlugin.m" />
 
-        <source-file src="src/ios/comscore/libcomScore.a" framework="true" />
+        <source-file src="src/ios/comScore/libcomScore.a" framework="true" />
         <header-file src="src/ios/comScore/headers/CSApplicationState.h" />
         <header-file src="src/ios/comScore/headers/CSCacheFlusher.h" />
         <header-file src="src/ios/comScore/headers/CSCensus.h" />

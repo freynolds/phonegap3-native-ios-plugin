@@ -1,9 +1,9 @@
-#import "DAXPlugin.h"
+#import "DaxPlugin.h"
 #import "AppDelegate.h"
 #import "CSComScore.h"
 #import <Cordova/CDV.h>
 
-@implementation DAXPlugin
+@implementation DaxPlugin
 - (void) initDAX: (CDVInvokedUrlCommand*)command;
 {
     NSString    *callbackId = command.callbackId;
