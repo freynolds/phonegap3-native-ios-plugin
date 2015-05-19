@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="de.websector.myplugin"
+    id="com.freynolds.recordVideoAndUploadS3"
     version="0.1.0">
-    <name>MyPlugin</name>   
+    <name>RecordVideoAndUploadS3</name>
     <!-- ios -->
-    <platform name="ios">    
+    <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="MyPlugin">
-                <param name="ios-package" value="MyPlugin" /> 
+            <feature name="RecordVideoAndUploadS3">
+                <param name="ios-package" value="RecordVideoAndUploadS3" />
             </feature>
         </config-file>
-        <js-module src="www/MyPlugin.js" name="MyPlugin">
-            <clobbers target="myPlugin" />
+        <js-module src="www/RecordVideoAndUploadS3.js" name="RecordVideoAndUploadS3">
+            <clobbers target="RecordVideoAndUploadS3" />
         </js-module>
-        <header-file src="src/ios/MyPlugin.h" />
-	    <source-file src="src/ios/MyPlugin.m" />
+        <header-file src="src/ios/RecordVideoAndUploadS3.h" />
+	    <source-file src="src/ios/RecordVideoAndUploadS3.m" />
     </platform>
 </plugin>
