@@ -5,6 +5,8 @@
 
 @implementation RecordVideoAndUploadS3
 
+NSUInteger videoTaskId = 0;
+
 
 - (void)pluginInitialize {
     static NSURLSession *session = nil;
@@ -49,6 +51,8 @@
 // - (IBAction)RecordVideoButton:(id)sender
 - (void)open:(CDVInvokedUrlCommand*)command
 {
+    
+    self.callbackId = command.callbackId;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
     {
         UIImagePickerController *videoRecorder = [[UIImagePickerController alloc] init];
@@ -74,7 +78,7 @@
             videoRecorder.cameraDevice = UIImagePickerControllerCameraDeviceFront;
 
         videoRecorder.mediaTypes = videoMediaTypesOnly;
-        videoRecorder.videoQuality = UIImagePickerControllerQualityType640x480;
+        videoRecorder.videoQuality = UIImagePickerControllerQualityTypeIFrame960x540;
         videoRecorder.videoMaximumDuration = 60;            //Specify in seconds (600 is default)
 
             [self.viewController presentViewController:videoRecorder animated:YES completion:nil];
@@ -99,6 +103,15 @@
     //Save the movie
     NSLog(@"Video recorded: %@", info);
     
+    
+    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+    // NSTimeInterval is defined as double
+    NSNumber *timeStampObj = [NSNumber numberWithDouble: timeStamp];
+    
+    self.uploadVideoName = [NSString stringWithFormat:@"%@-%@%@", self.uuid, timeStampObj, @".mp4"];
+    self.uploadImageName = [NSString stringWithFormat:@"%@-%@%@", self.uuid, timeStampObj, @".png"];
+    
+    
     NSURL *file_url = [info objectForKey:UIImagePickerControllerMediaURL];
     
     NSString *videoPath1 = @"";
@@ -110,22 +123,11 @@
         AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetPassthrough];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         
-        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-        // NSTimeInterval is defined as double
-        NSNumber *timeStampObj = [NSNumber numberWithDouble: timeStamp];
-        
-        self.uploadFileName = [NSString stringWithFormat:@"%@-%@%@", self.uuid, timeStampObj, @".mp4"];
-        
-        videoPath1 = [NSString stringWithFormat:@"%@/%@", [paths objectAtIndex:0], self.uploadFileName];
+        videoPath1 = [NSString stringWithFormat:@"%@/%@", [paths objectAtIndex:0], self.uploadVideoName];
         exportSession.outputURL = [NSURL fileURLWithPath:videoPath1];
         NSLog(@"videopath of your mp4 file = %@",videoPath1);  // PATH OF YOUR .mp4 FILE
         exportSession.outputFileType = AVFileTypeMPEG4;
         
-        //  CMTime start = CMTimeMakeWithSeconds(1.0, 600);
-        //  CMTime duration = CMTimeMakeWithSeconds(3.0, 600);
-        //  CMTimeRange range = CMTimeRangeMake(start, duration);
-        //   exportSession.timeRange = range;
-        //  UNCOMMENT ABOVE LINES FOR CROP VIDEO
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             
             switch ([exportSession status]) {
@@ -143,12 +145,13 @@
                     
                 default:
                     NSLog(@"Export success!");
-                    self.uploadFileURL = exportSession.outputURL;
+                    self.uploadVideoURL = exportSession.outputURL;
                     [self uploadVideo];
                     break;
                     
             }
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath1, self, nil, nil);
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
         }];
         
@@ -182,11 +185,15 @@
         return;
     }
     
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"status" : @"start", @"video": self.uploadVideoName, @"image": self.uploadImageName}];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+    
     AWSS3GetPreSignedURLRequest *getPreSignedURLRequest = [AWSS3GetPreSignedURLRequest new];
     getPreSignedURLRequest.bucket = @"fwtv-recordings";
-    getPreSignedURLRequest.key = self.uploadFileName,
+    getPreSignedURLRequest.key = self.uploadVideoName,
     getPreSignedURLRequest.HTTPMethod = AWSHTTPMethodPUT;
-    getPreSignedURLRequest.expires = [NSDate dateWithTimeIntervalSinceNow:3600];
+    getPreSignedURLRequest.expires = [NSDate dateWithTimeIntervalSinceNow:31536000];
     
     //Important: must set contentType for PUT request
     NSString *fileContentTypeStr = @"text/plain";
@@ -206,7 +213,52 @@
             [request setHTTPMethod:@"PUT"];
             [request setValue:fileContentTypeStr forHTTPHeaderField:@"Content-Type"];
             
-            self.uploadTask = [self.session uploadTaskWithRequest:request fromFile:self.uploadFileURL];
+            self.uploadTask = [self.session uploadTaskWithRequest:request fromFile:self.uploadVideoURL];
+            videoTaskId = self.uploadTask.taskIdentifier;
+            [self.uploadTask resume];
+            
+        }
+        
+        return nil;
+    }];
+}
+
+- (void)uploadImage {
+    if (self.uploadTask)
+    {
+        return;
+    }
+    
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"status" : @"start", @"video": self.uploadVideoName, @"image": self.uploadImageName}];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+    
+    AWSS3GetPreSignedURLRequest *getPreSignedURLRequest = [AWSS3GetPreSignedURLRequest new];
+    getPreSignedURLRequest.bucket = @"fwtv-recordings";
+    getPreSignedURLRequest.key = self.uploadImageName,
+    getPreSignedURLRequest.HTTPMethod = AWSHTTPMethodPUT;
+    getPreSignedURLRequest.expires = [NSDate dateWithTimeIntervalSinceNow:31536000];
+    
+    //Important: must set contentType for PUT request
+    NSString *fileContentTypeStr = @"text/plain";
+    getPreSignedURLRequest.contentType = fileContentTypeStr;
+    
+    [[[AWSS3PreSignedURLBuilder defaultS3PreSignedURLBuilder] getPreSignedURL:getPreSignedURLRequest] continueWithBlock:^id(BFTask *task) {
+        
+        if (task.error) {
+            NSLog(@"Error: %@",task.error);
+        } else {
+            
+            NSURL *presignedURL = task.result;
+            NSLog(@"upload presignedURL is: \n%@", presignedURL);
+            
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:presignedURL];
+            request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+            [request setHTTPMethod:@"PUT"];
+            [request setValue:fileContentTypeStr forHTTPHeaderField:@"Content-Type"];
+            
+            self.uploadTask = [self.session uploadTaskWithRequest:request fromFile:self.uploadImageURL];
+            [self.uploadTask setTaskDescription:@"image"];
             [self.uploadTask resume];
             
         }
@@ -218,33 +270,38 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     double progress = (double)totalBytesSent / (double)totalBytesExpectedToSend;
-    
+    int progressInt = (int)(progress*100);
     NSLog(@"UploadTask progress: %lf", progress);
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        self.progressView.progress = progress;
-//        self.statusLabel.text = @"Uploading...";
-//    });
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"status" : @"uploading", @"progress": [NSNumber numberWithInt:progressInt], @"video": self.uploadVideoName, @"image": self.uploadImageName}];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     
+    self.uploadTask = nil;
+    
     if (!error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            self.statusLabel.text = @"Upload successfully";
-//        });
         NSLog(@"S3 UploadTask: %@ completed successfully", task);
+        if (videoTaskId == task.taskIdentifier) {
+            //upload image
+            [self saveImageAndUpload];
+            videoTaskId = 0;
+        } else {
+            //finish
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"status" : @"completed", @"video": self.uploadVideoName, @"image": self.uploadImageName}];
+            [pluginResult setKeepCallbackAsBool:TRUE];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+        }
+
+
+
     }else {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            self.statusLabel.text = @"Upload failed.";
-//        });
         NSLog(@"S3 UploadTask: %@ completed with error: %@", task, [error localizedDescription]);
     }
     
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        self.progressView.progress = (double)task.countOfBytesSent / (double)task.countOfBytesExpectedToSend;;
-//    });
-    
-    self.uploadTask = nil;
+
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
@@ -257,6 +314,31 @@
 //    }
     
     NSLog(@"Completion Handler has been invoked, background upload task has finished.");
+}
+
+-(void)saveImageAndUpload {
+    
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.uploadVideoURL options:nil];
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    
+    CMTime time = CMTimeMake(0, 25);
+    NSError *err;
+    CMTime actualTime;
+    
+    CGImageRef tempImage = [generator copyCGImageAtTime:time actualTime:&actualTime error:&err];
+    UIImage *image = [[UIImage alloc] initWithCGImage:tempImage];
+    NSData *pngData = UIImagePNGRepresentation(image);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:self.uploadImageName]; //Add the file name
+    [pngData writeToFile:filePath atomically:YES]; //Write the file
+    self.uploadImageURL = [NSURL fileURLWithPath:filePath];
+    NSLog(@"Image done: %@", filePath);
+    CGImageRelease(tempImage);
+    
+    [self uploadImage];
+    
 }
 
 

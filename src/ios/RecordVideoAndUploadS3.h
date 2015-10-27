@@ -9,9 +9,12 @@
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) NSURLSession *session;
 @property (strong, nonatomic) NSURLSessionUploadTask *uploadTask;
-@property (strong, nonatomic) NSURL *uploadFileURL;
-@property (strong, nonatomic) NSString *uploadFileName;
+@property (strong, nonatomic) NSURL *uploadVideoURL;
+@property (strong, nonatomic) NSString *uploadVideoName;
+@property (strong, nonatomic) NSURL *uploadImageURL;
+@property (strong, nonatomic) NSString *uploadImageName;
 @property (strong, nonatomic) NSString *uuid;
 @property (strong, nonatomic) NSString *callbackId;
+
 
 @end
