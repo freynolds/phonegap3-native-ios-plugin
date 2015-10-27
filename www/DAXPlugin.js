@@ -15,20 +15,16 @@ DaxPlugin.prototype.init = function(success, fail) {
 
 // log an event
 //
-// category = The event category. This parameter is required to be non-empty.
-// eventAction = The event action. This parameter is required to be non-empty.
-// eventLabel = The event label. This parameter may be a blank string to indicate no label.
-// eventValue = The event value. This parameter may be -1 to indicate no value.
-DaxPlugin.prototype.trackEvent = function(success, fail, eventLabel, eventValue) {
-    exec(success, fail, 'DaxPlugin', 'trackEvent', [eventLabel, eventValue]);
+
+DaxPlugin.prototype.trackEvent = function(success, fail, events) {
+    exec(success, fail, 'DaxPlugin', 'trackEvent', [events]);
 };
 
 
 // log a page view
 //
-// pageURL = the URL of the page view
-DaxPlugin.prototype.trackPage = function(success, fail, pageURL) {
-    exec(success, fail, 'DaxPlugin', 'trackPage', [pageURL]);
+DaxPlugin.prototype.trackPage = function(success, fail, data) {
+    exec(success, fail, 'DaxPlugin', 'trackPage', [data]);
 };
 
 DaxPlugin.prototype.exit = function(success, fail) {

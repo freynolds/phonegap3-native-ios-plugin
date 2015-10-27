@@ -31,11 +31,9 @@
         <header-file src="src/ios/comScore/headers/CSSessionState.h" />
         <header-file src="src/ios/comScore/headers/CSStorage.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSense.h" />
-        <header-file src="src/ios/comScore/headers/CSStreamSenseAVPlayerPlugin.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSenseClip.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSenseDefines.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSenseDelegate.h" />
-        <header-file src="src/ios/comScore/headers/CSStreamSenseMPMoviePlayerControllerPlugin.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSensePlaylist.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSensePlugin.h" />
         <header-file src="src/ios/comScore/headers/CSStreamSensePluginProtocol.h" />
